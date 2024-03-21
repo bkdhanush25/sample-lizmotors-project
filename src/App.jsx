@@ -340,7 +340,7 @@ const Flow = () => {
       fitView
       className="bg-teal-50"
     >
-      <MiniMap />
+      <MiniMap pannable zoomable />
       <Controls />
     </ReactFlow>
     </div>
