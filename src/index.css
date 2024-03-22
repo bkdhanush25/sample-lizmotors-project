@@ -1,3 +1,7 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+.kiwi-maru {
+    font-family: "Kiwi Maru", serif;
+  }
