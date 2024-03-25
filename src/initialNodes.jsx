@@ -106,7 +106,7 @@ export const initNodes = [
     id: "8",
     type: "custom",
     data: {
-      name: "Inernal",
+      name: "Internal",
       bgcolor: "#545EFF",
       hovercontent:
         "orem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et",
