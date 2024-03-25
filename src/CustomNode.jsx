@@ -24,32 +24,6 @@ function CustomNode({ data }) {
           </m.div>
         )}
       </AnimatePresence>
-      {/* <AnimatePresence>
-        {isShown && (
-          <m.div
-            whileInView={{ scale: 1.2 }}
-            transition={{ type: "just" }}
-            className="absolute bg-white z-10 right-2 top-2 rounded-md hover:text-white hover:bg-red-500"
-          >
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              width="24"
-              height="24"
-              fill="none"
-              viewBox="0 0 24 24"
-              className="p-1"
-            >
-              <path
-                stroke="currentColor"
-                stroke-linecap="round"
-                stroke-linejoin="round"
-                stroke-width="2"
-                d="M5 7h14m-9 3v8m4-8v8M10 3h4a1 1 0 0 1 1 1v3H9V4a1 1 0 0 1 1-1ZM6 7h12v13a1 1 0 0 1-1 1H7a1 1 0 0 1-1-1V7Z"
-              />
-            </svg>
-          </m.div>
-        )}
-      </AnimatePresence> */}
       <m.div
         className="px-4 py-2 shadow-md rounded-md flex justify-center border-2 border-stone-400 min-w-[150px]"
         style={{ backgroundColor: data.bgcolor }}

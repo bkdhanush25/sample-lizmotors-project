@@ -20,6 +20,7 @@ import CustomNode from "./CustomNode";
 import { initNodes } from "./initialNodes";
 import { initEdges } from "./initialEdges";
 import axios from "axios";
+import { ColorRing } from "react-loader-spinner";
 
 const nodeTypes = {
   custom: CustomNode,
@@ -52,51 +53,51 @@ const Flow = () => {
   const [nodeDetailedDescription, setNodeDetailedDescription] = useState("");
   const [bgColor, setBgColor] = React.useState({});
   const [nodeDetailedImage, setNodeDetailedImage] = useState(null);
+  const [isLoading, setIsLoading] = useState(false);
 
   // Upload File in Cloudinary and Get URL
-  const uploadFile = async() => {
+  const uploadFile = async () => {
     const data = new FormData();
-    data.append("file",nodeDetailedImage);
-    data.append("upload_preset",'sample-lizmotors-preset');
-    try{
-      let cloudName =   import.meta.env.VITE_CLOUDINARY_CLOUD_NAME;
+    data.append("file", nodeDetailedImage);
+    data.append("upload_preset", "sample-lizmotors-preset");
+    try {
+      let cloudName = import.meta.env.VITE_CLOUDINARY_CLOUD_NAME;
       let api = `https://api.cloudinary.com/v1_1/${cloudName}/image/upload`;
       const res = await axios.post(api, data);
-      const {secure_url} = res.data;
-      console.log(secure_url);
+      const { secure_url } = res.data;
       return secure_url;
-    }catch(err){
-      console.log(err);
-    }
-  }
+    } catch (err) {}
+  };
 
   // Function to Add Node
   const handleInputNodeSubmit = async (event) => {
+    setIsLoading(true);
     event.preventDefault();
     try {
       const imgUrl = await uploadFile();
-    
-    const newNode = {
-      id: Date.now().toString(),
-      type: "custom",
-      data: {
-        name: nodeName,
-        bgcolor: bgColor.hex,
-        hovercontent: nodeDetailedDescription,
-        hoverimage: imgUrl,
-      },
-      sourcePosition: "right",
-      targetPosition: "left",
-      position: { x: 1000, y: 0 },
-    };
-    setNodes((prevElements) => [...prevElements, newNode]);
-    setIsOpenPopup(false);
-    setNodeName("");
-    setNodeDetailedDescription("");
-    setNodeDetailedImage(null);
-  } catch (err) {
-    console.log(err);
-  }
+
+      const newNode = {
+        id: Date.now().toString(),
+        type: "custom",
+        data: {
+          name: nodeName,
+          bgcolor: bgColor.hex,
+          hovercontent: nodeDetailedDescription,
+          hoverimage: imgUrl,
+        },
+        sourcePosition: "right",
+        targetPosition: "left",
+        position: { x: 1000, y: 0 },
+      };
+      setNodes((prevElements) => [...prevElements, newNode]);
+      setIsOpenPopup(false);
+      setNodeName("");
+      setNodeDetailedDescription("");
+      setNodeDetailedImage(null);
+    } catch (err) {
+      console.log(err);
+    }
+    setIsLoading(false);
   };
 
   // Function to Cancel Add Node
@@ -110,6 +111,7 @@ const Flow = () => {
   return (
     <div className="w-[100vw] h-[100vh]">
       {isOpenPopup && (
+        // Add Node Popup
         <div className="absolute w-[100vw] h-[100vh] bg-black/25 z-50 flex">
           <div className="h-min w-[95vw] md:w-min relative my-auto mx-auto bg-white rounded-xl">
             <h3 className="text-3xl font-bold py-5 px-5 md:px-10">Add Node</h3>
@@ -127,6 +129,7 @@ const Flow = () => {
                     onChange={(e) => setNodeName(e.target.value)}
                     className="w-44 md:w-96 lg:w-72 xl:w-96 h-9 pl-2 rounded-lg border-transparent focus:border-transparent focus:outline-primary-color shadow-inner bg-zinc-100 focus:bg-white"
                     required
+                    disabled={isLoading}
                   />
                 </div>
                 <div className="flex gap-3">
@@ -145,6 +148,7 @@ const Flow = () => {
                     placeholder="Enter the Detailed Description"
                     className="w-44 md:w-96 lg:w-72 xl:w-96 rounded-lg pl-2 pt-1 border-transparent  focus:outline-primary-color shadow-inner bg-zinc-100 focus:bg-white"
                     required
+                    disabled={isLoading}
                   ></textarea>
                 </div>
                 <div className="flex gap-5 items-center">
@@ -156,6 +160,7 @@ const Flow = () => {
                     initialValue="#FD853A"
                     onChange={setBgColor}
                     placement="right"
+                    disabled={isLoading}
                   />
                 </div>
                 <div className="flex gap-3">
@@ -167,6 +172,7 @@ const Flow = () => {
                     onChange={(e) =>
                       setNodeDetailedImage((prev) => e.target.files[0])
                     }
+                    disabled={isLoading}
                   />
                 </div>
               </div>
@@ -176,9 +182,20 @@ const Flow = () => {
                   <button
                     className="py-3 px-8 border-2 border-primary-color text-white rounded-full bg-primary-color text-lg font-bold"
                     type="submit"
-                    on
                   >
-                    Save
+                    {isLoading ? (
+                      <ColorRing
+                        visible={true}
+                        height="30"
+                        width="30"
+                        ariaLabel="color-ring-loading"
+                        wrapperStyle={{}}
+                        wrapperClass="color-ring-wrapper"
+                        colors={["#000000"]}
+                      />
+                    ) : (
+                      "Save"
+                    )}
                   </button>
                 </Ripples>
                 <Ripples className="rounded-full">
@@ -204,6 +221,7 @@ const Flow = () => {
           </div>
         </div>
       )}
+      {/* Flow Chart Architecture */}
       <ReactFlow
         nodes={nodes}
         edges={edges}
